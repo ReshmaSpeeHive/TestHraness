@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHraness", "TestHraness\TestHraness.csproj", "{E382B00C-ED11-4A18-891A-FFDB3BED21FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilityFunctions", "UtilityFunctions\UtilityFunctions.csproj", "{9C1D76BE-37C8-432B-B7B1-25318D3562D5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E382B00C-ED11-4A18-891A-FFDB3BED21FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E382B00C-ED11-4A18-891A-FFDB3BED21FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E382B00C-ED11-4A18-891A-FFDB3BED21FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E382B00C-ED11-4A18-891A-FFDB3BED21FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C1D76BE-37C8-432B-B7B1-25318D3562D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C1D76BE-37C8-432B-B7B1-25318D3562D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C1D76BE-37C8-432B-B7B1-25318D3562D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C1D76BE-37C8-432B-B7B1-25318D3562D5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A302594D-06BD-4F41-BB9D-98A246972F09}
+	EndGlobalSection
+EndGlobal
