@@ -2,42 +2,21 @@
 
 const string TargetAssemblyFileName = "UtilityFunctions.dll";
 const string TargetNamespace = "UtilityFunctions";
+
 Assembly assembly= Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, TargetAssemblyFileName));
 List<System.Type> classes= assembly.GetTypes()
-    .Where(t=>t.Namespace == TargetNamespace).ToList();
+    .Where(t=>t.Namespace == TargetNamespace && ThisClass.HasInformationAttribute(t)).ToList();
 ThisClass.WritePromptToScreen("Please press the number key associated with " +
                                    "the class you wish to test");
-//int count = 0;
-//foreach (System.Type t in classes)
-//{
-//    count++;
-//    Console.WriteLine($"{count}.{t}");
-//}
+
 ThisClass.DisplayProgramElementList(classes);
 Type typeChoice=ThisClass.ReturnProgramElementReferenceFromList(classes);
-
-//ConsoleKey consoleKey = Console.ReadKey().Key;
-//Type classChoice = null;
-//switch (consoleKey)
-//{
-//    case ConsoleKey.D1:
-//        classChoice = classes[0];
-//        break;
-//    case ConsoleKey.D2:
-//        classChoice = classes[1];
-//        break;
-//    case ConsoleKey.D3:
-//        classChoice = classes[2];
-//        break;
-//    case ConsoleKey.D4:
-//        classChoice = classes[3];
-//        break;
-//}
 object classInstance = Activator.CreateInstance(typeChoice, null);
 Console.Clear();
 ThisClass.WriteHeadingToScreen($"Class: '{typeChoice}'");
+ThisClass.DisplayElementDescription(ThisClass.ReturnInformationCustomAttributeDescription(typeChoice));
 ThisClass.WritePromptToScreen("Please enter the number associated with the method you wish to test");
-List<MethodInfo> methods = typeChoice.GetMethods().ToList();
+List<MethodInfo> methods = typeChoice.GetMethods().Where(m=>ThisClass.HasInformationAttribute(m)).ToList();
 ThisClass.DisplayProgramElementList(methods);
 MethodInfo methodChoice = ThisClass.ReturnProgramElementReferenceFromList(methods);
 if (methodChoice != null)
@@ -45,6 +24,7 @@ if (methodChoice != null)
     Console.Clear();
 
     ThisClass.WriteHeadingToScreen($"Class: '{typeChoice}' - Method: '{methodChoice.Name}'");
+    ThisClass.DisplayElementDescription(ThisClass.ReturnInformationCustomAttributeDescription(methodChoice));
     ParameterInfo[] parameters = methodChoice.GetParameters();
     // encapsulating the functionality
     object result = ThisClass.GetResult(classInstance, methodChoice, parameters);
@@ -53,6 +33,7 @@ if (methodChoice != null)
 }
 public static class ThisClass
 {
+    const string InformationAttributeTypeName = "UTILITYFUNCTIONS.INFORMATIONATTRIBUTE";
     public static void WritePromptToScreen(string promptText)
     {
         Console.WriteLine(promptText);
@@ -145,6 +126,57 @@ public static class ThisClass
         Console.WriteLine($"Result: {result}");
         Console.ResetColor();
         Console.WriteLine();
+    }
+    public static bool HasInformationAttribute(MemberInfo mi)
+    {
+ 
+        foreach (var attrib in mi.GetCustomAttributes())
+        {
+            Type typeAttrib = attrib.GetType();
+
+            if (typeAttrib.ToString().ToUpper() == InformationAttributeTypeName)
+            {
+                return true;
+            }
+
+        }
+        return false;
+    }
+    public static string ReturnInformationCustomAttributeDescription(MemberInfo mi)
+    {
+        const string InformationAttributeDescriptionPropertyName = "Description";
+
+        foreach (var attrib in mi.GetCustomAttributes())
+        {
+            Type typeAttrib = attrib.GetType();
+
+            if (typeAttrib.ToString().ToUpper() == InformationAttributeTypeName)
+            {
+                PropertyInfo propertyInfo = typeAttrib.GetProperty(InformationAttributeDescriptionPropertyName); //reflection
+
+                if (propertyInfo != null)
+                {
+                    object s = propertyInfo.GetValue(attrib, null);
+
+                    if (s != null)
+                        return s.ToString();
+                }
+            }
+
+        }
+        return null;
+
+    }
+    public static void DisplayElementDescription(string elementDescription)
+    {
+        if (elementDescription != null)
+        {
+            Console.BackgroundColor = ConsoleColor.DarkBlue;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(elementDescription);
+            Console.ResetColor();
+            Console.WriteLine();
+        }
     }
 
 }
