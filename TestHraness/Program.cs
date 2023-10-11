@@ -2,7 +2,7 @@
 
 const string TargetAssemblyFileName = "UtilityFunctions.dll";
 const string TargetNamespace = "UtilityFunctions";
-Assembly assembly= Assembly.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, TargetAssemblyFileName));
+Assembly assembly= Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, TargetAssemblyFileName));
 List<System.Type> classes= assembly.GetTypes()
     .Where(t=>t.Namespace == TargetNamespace).ToList();
 ThisClass.WritePromptToScreen("Please press the number key associated with " +
@@ -46,7 +46,10 @@ if (methodChoice != null)
 
     ThisClass.WriteHeadingToScreen($"Class: '{typeChoice}' - Method: '{methodChoice.Name}'");
     ParameterInfo[] parameters = methodChoice.GetParameters();
+    // encapsulating the functionality
+    object result = ThisClass.GetResult(classInstance, methodChoice, parameters);
 
+    ThisClass.WriteResultToScreen(result);
 }
 public static class ThisClass
 {
@@ -90,6 +93,58 @@ public static class ThisClass
 
         }
         return default;
+    }
+    private static object[] ReturnParameterValueInputAsObjectArray(ParameterInfo[] parameters)
+    {
+        object[] paramValues = new object[parameters.Length];
+        int itemCount = 0;
+        foreach (ParameterInfo parameterInfo in parameters)
+        {
+            WritePromptToScreen($"Please enter a value for the parameter named, '{parameterInfo.Name}'");
+            if (parameterInfo.ParameterType == typeof(string))
+            {
+                string inputString = Console.ReadLine();
+                paramValues[itemCount] = inputString;
+            }
+            else if (parameterInfo.ParameterType == typeof(int))
+            {
+                int inputInt = Int32.Parse(Console.ReadLine());
+                paramValues[itemCount] = inputInt;
+            }
+            else if (parameterInfo.ParameterType == typeof(double))
+            {
+                double inputDouble = Double.Parse(Console.ReadLine());
+                paramValues[itemCount] = inputDouble;
+            }
+
+            itemCount++;
+        }
+        return paramValues;
+    }
+    public static object GetResult(Object classInstance, MethodInfo methodInfo,
+                                        ParameterInfo[] parameters)
+    {
+        object result = null;
+        if(parameters.Length == 0)
+        {
+            result =   methodInfo.Invoke(classInstance, null);
+        }
+        else
+        {
+            var paramValueArray = ReturnParameterValueInputAsObjectArray(parameters);
+            result=methodInfo.Invoke(classInstance, paramValueArray);
+
+        }
+        return result;
+    }
+    public static void WriteResultToScreen(object result)
+    {
+        Console.WriteLine();
+        Console.BackgroundColor = ConsoleColor.DarkGreen;
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine($"Result: {result}");
+        Console.ResetColor();
+        Console.WriteLine();
     }
 
 }
