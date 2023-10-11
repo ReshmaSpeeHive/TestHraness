@@ -6,6 +6,9 @@ const string TargetNamespace = "UtilityFunctions";
 Assembly assembly= Assembly.LoadFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, TargetAssemblyFileName));
 List<System.Type> classes= assembly.GetTypes()
     .Where(t=>t.Namespace == TargetNamespace && ThisClass.HasInformationAttribute(t)).ToList();
+while (true)
+{ 
+    Console.Clear();
 ThisClass.WritePromptToScreen("Please press the number key associated with " +
                                    "the class you wish to test");
 
@@ -30,6 +33,12 @@ if (methodChoice != null)
     object result = ThisClass.GetResult(classInstance, methodChoice, parameters);
 
     ThisClass.WriteResultToScreen(result);
+}
+    Console.WriteLine();
+    ThisClass.WritePromptToScreen("Please press the 'Spacebar' key to end the application " +
+        "or any other key to continue...");
+
+    if (Console.ReadKey().Key == ConsoleKey.Spacebar) break;
 }
 public static class ThisClass
 {
